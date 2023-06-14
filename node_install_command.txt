@@ -1,0 +1,163 @@
+step 1: npm init
+step 2: npm i nodemon / npm i -g nodemon
+step 3: npm install -g express  
+step 4: npm install express --save   
+step 5: npm install body-parser --save   
+step 6: npm install cookie-parser --save   
+step 7: npm install multer --save   
+step 8: npm i cors
+step 9: npm i body-parser
+step 10: npm install mysql2
+step 11: nodemon // for Program run Command
+
+URL: localhost:8000
+
+
+
+
+var express = require('express'); 
+var cors = require('cors'); 
+var bodyParser = require('body-parser');
+var app = express(); 
+
+app.use(cors());
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended:true
+}));
+app.use(express.static('public'));
+  
+app.get('/',function(req,res){ 
+res.send(data);
+})
+// ---------------------------------------------------------------------------------------------
+                                   //SELECT 
+//-----------------------------------------
+app.get('/select',function(req,res){
+var mysql = require('mysql2');  
+var con = mysql.createConnection({  
+host: "localhost",  
+user: "root",  
+password: "",  
+database: ("Database name")
+});  
+con.connect(function(err) {  
+if (err) throw err;  
+var sql = `SELECT * FROM (tablename)`;  
+con.query(sql, function (err, result) {  
+if (err) throw err;  
+console.log("record select: " + result.affectedRows);  
+res.send(result);
+});  
+});  
+});
+// ---------------------------------------------------------------------------------------------
+                              //INSERT
+// ------------------------------------
+app.post('/insert',function(req,res){
+var mysql = require('mysql2');
+var data=req.body;
+
+var con = mysql.createConnection({  
+host: "localhost",  
+user: "root",  
+password: "",  
+database:("Database name")  
+});  
+con.connect(function(err) {  
+if (err) throw err;  
+console.log("Connected!");  
+var sql = `INSERT INTO (tablename) (id ,username, password) VALUES (null ,'${data.username}','${data.password}')`;  
+con.query(sql, function (err, result) {  
+if (err) throw err;  
+console.log("1 record inserted");  
+});   
+});
+});
+
+// ---------------------------------------------------------------------------------------------
+                              //Edit
+// ------------------------------------
+app.post('/edit',function(req,res){
+var mysql = require('mysql2');
+var data=req.body;
+
+var con = mysql.createConnection({  
+host: "localhost",  
+user: "root",  
+password: "",  
+database: ("Database name")  
+});  
+con.connect(function(err) {  
+if (err) throw err;  
+console.log("Connected!");  
+var sql = `UPDATE (tablename) SET username = '${data.username}', password = '${data.password}'WHERE id ='${data.id}'`;  
+con.query(sql, function (err, result) {  
+if (err) throw err;  
+console.log("1 record inserted");  
+});   
+});
+});
+
+// ---------------------------------------------------------------------------------------------
+                              //DELETE
+// ------------------------------------
+app.post('/delete',function(req,res){
+
+var mysql = require('mysql2');  
+var con = mysql.createConnection({  
+host: "localhost",  
+user: "root",  
+password: "",  
+database:("Database name")  
+});  
+  var data=req.body;
+con.connect(function(err) {  
+if (err) throw err;  
+var sql = `DELETE FROM (tablename) WHERE id ='${data.id}'`;  
+con.query(sql, function (err, result) {  
+if (err) throw err;  
+console.log("record deleted: " + result.affectedRows);  
+});  
+});  
+});
+// ---------------------------------------------------------------------------------------------
+                //SingleData
+// ------------------------------------
+app.post('/onedata',function(req,res){
+var mysql = require('mysql2');
+var data=req.body;
+
+var con = mysql.createConnection({  
+host: "localhost",  
+user: "root",  
+password: "",  
+database: ("Database name")  
+});  
+con.connect(function(err) {  
+if (err) throw err;  
+console.log("Connected!");  
+var sql = `SELECT * FROM (tablename)n WHERE id= '${data.id}'`;  
+con.query(sql, function (err, result) {  
+if (err) throw err;  
+console.log("1 record inserted");  
+res.send(result);
+});   
+});
+});
+
+// ---------------------------------------------------------------------------------------------
+
+
+var server = app.listen(8000, function () {  
+var host = server.address().address  
+  var port = server.address().port  
+ console.log("Example app listening at http://%s:%s", host, port)  
+})
